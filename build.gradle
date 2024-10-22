@@ -6,7 +6,6 @@ plugins {
 
 group 'com.example'
 version '1.0-SNAPSHOT'
-
 sourceCompatibility = 17
 
 repositories {
@@ -15,6 +14,10 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'net.logstash.logback:logstash-logback-encoder:5.2' // Replaced compile with implementation
-    testImplementation 'junit:junit:4.12' // testCompile should be testImplementation
+    implementation 'net.logstash.logback:logstash-logback-encoder:7.4'  // Updated version
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'  // Updated to JUnit 5
+}
+
+test {
+    useJUnitPlatform()  // Add this for JUnit 5 support
 }
