@@ -6,7 +6,13 @@ plugins {
 
 group 'com.example'
 version '1.0-SNAPSHOT'
-sourceCompatibility = 17
+
+// Remove sourceCompatibility and replace with proper toolchain configuration
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
 
 repositories {
     mavenCentral()
@@ -14,10 +20,11 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'net.logstash.logback:logstash-logback-encoder:7.4'  // Updated version
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'  // Updated to JUnit 5
+    implementation 'net.logstash.logback:logstash-logback-encoder:5.2'
+    testImplementation 'junit:junit:4.12'
 }
 
-test {
-    useJUnitPlatform()  // Add this for JUnit 5 support
+// Add this to ensure Gradle uses the correct Java version
+tasks.withType(JavaCompile) {
+    options.release = 17
 }
