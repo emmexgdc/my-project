@@ -15,22 +15,35 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    # Changed to JDK 8 to match your Dockerfile
-    - name: Set up JDK 8
+    - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
-        java-version: '8'
+        java-version: '17'
         distribution: 'temurin'
+        cache: 'gradle'
 
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582
 
+    # Build the application and verify the JAR exists
     - name: Build with Gradle Wrapper
-      run: ./gradlew build
+      run: |
+        ./gradlew clean bootJar
+        ls -la build/libs/
 
-    # Debug step to verify build artifacts
-    - name: List build directory
-      run: ls -la build/libs/
+    # Add explicit verification step
+    - name: Verify JAR file
+      run: |
+        if [ ! -d "build/libs" ]; then
+          echo "build/libs directory does not exist"
+          exit 1
+        fi
+        if [ -z "$(ls -A build/libs/)" ]; then
+          echo "No JAR file found in build/libs"
+          exit 1
+        fi
+        echo "Found these files in build/libs:"
+        ls -la build/libs/
 
     - name: Build Docker Image
       run: docker build -t demo-app:latest .
@@ -54,10 +67,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Set up JDK 8
+    - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
-        java-version: '8'
+        java-version: '17'
         distribution: 'temurin'
 
     - name: Generate and submit dependency graph
